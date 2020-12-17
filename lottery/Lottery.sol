@@ -9,36 +9,45 @@ pragma solidity ^0.4.17;
 // time period.
 
 contract Lottery {
-  address public manager;
-  address[] public players;
+    address public manager;
+    address[] public players;
+    address public winner;
 
-  function Lottery() public {
-    manager = msg.sender;
-  }
+    function Lottery() public {
+        manager = msg.sender;
+    }
 
-  function enter() public payable {
-    require(msg.value >= 0.01 ether);
-    players.push(msg.sender);
-  }
+    function enter() public payable {
+        require(msg.value >= 0.01 ether);
+        players.push(msg.sender);
+    }
 
-  // Follwoing is going to be a helper function for random number generation
-  // unit() converts its input into an integer
+    // Follwoing is going to be a helper function for random number generation
+    // unit() converts its input into an integer
 
-  function random() private view returns (uint) {
-    return uint(keccak256(block.difficulty, now, players));
-  }
+    function random() private view returns (uint) {
+        // now is the reference to current time
+        return uint(keccak256(block.difficulty, now, players));
+    }
 
-  // this. is a reference to the current deployed instance of the contract
-  function pickWinner() public {
-    // msg.sender always contains the address of the node who call the function
-    require(msg.sender == manager);
+    function pickWinner() public restricted {
+        // require(msg.sender ==  manager); // This will be moved to the function modifier below
+        uint index = random()  % players.length;
+        winner = players[index];
+        winner.transfer(this.balance);
+        // Below (0) indicate that the dynamic array will be initialised with size 0.
+        players = new address[](0);
+    }
 
-    uint index = random() % player.length();
-    // This means transfer all the funds held by the contract at the instance to
-    // the address (returned by palyers[index]) of the winner player.
-    players[index].transfer(this.balance);
+    // Below, in order to avoid repition, a function modifier is used. restricted is not a keyword and this modifier
+    // can be applied to any number of functions and it will be applied to the target function's context
 
-    // Below (0) indicate that the dynamic array will be initialised with size 0.
-    players = new address[](0);
-  }
+    modifier restricted() {
+        require(msg.sender ==  manager);
+        _; // _ will be replaced by the body of code of the function where this modifier (restricted) is applied
+    }
+
+    function getPlayers() public view returns(address[]) {
+        return players;
+    }
 }
