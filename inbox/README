@@ -1,0 +1,6 @@
+- The whole porject is going to be an npm project.
+- npm init was used in the project directory to initialise the node project that creates a package.json file.
+
+- Solidity compiler --> 1. Bytecode (that we deploy on blockchain using the deploy.js script); --> 2. ABI that we use to interact with the deployed contract using web3.js.
+
+- Mocha is the testing framework. Ganache is a local testRPC/blockchain
