@@ -30,9 +30,15 @@ contract Lottery {
 
   // this. is a reference to the current deployed instance of the contract
   function pickWinner() public {
+    // msg.sender always contains the address of the node who call the function
+    require(msg.sender == manager);
+
     uint index = random() % player.length();
     // This means transfer all the funds held by the contract at the instance to
     // the address (returned by palyers[index]) of the winner player.
     players[index].transfer(this.balance);
+
+    // Below (0) indicate that the dynamic array will be initialised with size 0.
+    players = new address[](0);
   }
 }
