@@ -30,7 +30,7 @@ class App extends React.Component {
       this.setState({ manager, players, balance, accounts });
   }
 
-  onSubmit = async (event) => {
+  onSubmit = async (event) => { // event is just for forms I think
     event.preventDefault(); // To stop form from auto submitting itself like in HTML
     this.setState({ message: 'Transaction waiting for confirmation.' });
     await lottery.methods.enter().send({
@@ -38,6 +38,14 @@ class App extends React.Component {
       value: web3.utils.toWei(this.state.value, 'ether')
     });
     this.setState({ message: 'Success! You have been entered into the lottery, good luck!' });
+  };
+
+  onClick = async () => {
+    this.setState({ message: 'Transaction waiting for confirmation.' });
+    await lottery.methods.pickWinner().send({
+      from: this.state.accounts[0] // there might be some logical fallacy here. You may need to read in the read in the account here again
+    });
+    this.setState({ message: 'Success! A winner has been picked. Congratulations!' });
   };
 
   async currentAccounts() {
@@ -68,6 +76,11 @@ render() {
             <button>Wager!</button>
           </form>
         </div>
+        <hr />
+        <h4>Contract creator: {this.state.manager}, picks the winner.</h4>
+        <button onClick={this.onClick}>Pick a winner!</button>
+        <hr />
+        <h4>{this.state.message}</h4>
       </div>
     );
   }
