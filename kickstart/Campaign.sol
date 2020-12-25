@@ -1,3 +1,4 @@
+// Simple git push test
 pragma solidity ^0.4.17;
 
 contract Campaign {
