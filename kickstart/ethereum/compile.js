@@ -22,12 +22,15 @@ const source = fs.readFileSync(campaignPath, 'utf8');
 // Now the actual compilation step
 // Output will contain our CampaignFactory and Campaign contracts
 const output = solc.compile(source, 1).contracts;
+console.log(output);
 
 // Now we create a new build directory and write our output from above in json form in it
+// In the output we will have keys as the name of our contracts as :Compaign. In order to remove the :
+// we use 'replace' on contract in the path.resolve() function
 fs.ensureDirSync(buildPath);
 for(let contract in output) {
   fs.outputJsonSync(
-    path.resolve(buildPath, contract + '.json'),
+    path.resolve(buildPath, contract.replace(':', '') + '.json'),
     output[contract]
   );
 }
