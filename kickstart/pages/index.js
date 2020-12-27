@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import { Card, Button } from 'semantic-ui-react';
+import Layout from '../components/Layout.js';
 
 
 
@@ -14,8 +15,8 @@ class CampaignIndex extends Component {
   // for the compenent without rendering it (thus making it more cost effective) and passes the fetched data to the props of
   // the compenent for it to render. And can then be accessible wit this.props.<data>
   static async getInitialProps() {
+    // Following call gives us addresses of all the deployed campaigns
     const campaigns = await factory.methods.getDeployedCampaigns().call();
-
     // Following is the same as return {campaigns: campaigns}
     return { campaigns };
   }
@@ -33,7 +34,7 @@ class CampaignIndex extends Component {
     const items = this.props.campaigns.map(address => {
       return {
         // Following is a semantic ui specific syntax for Cards.Group
-        header: address,
+        header: 'Campaign at: ' + address,
         description: <a>View the campaign</a>,
         // To make the card fit the window width
         fluid: true
@@ -45,15 +46,18 @@ class CampaignIndex extends Component {
   render() {
 
     return (
-      <div>
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"></link>
-        {this.renderCampaigns()}
-        <Button
-          content="Create a new campaign"
-          icon="add"
-          primary
-        />
-      </div>
+      <Layout>
+          <div>
+            <h3>Open Campaigns: {this.props.campaigns.length}</h3>
+            <Button
+              floated="right"
+              content="Create a new campaign"
+              icon="add"
+              primary
+            />
+            {this.renderCampaigns()}
+          </div>
+      </Layout>
       );
   }
 }

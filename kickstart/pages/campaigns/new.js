@@ -1,0 +1,70 @@
+import React, { Component } from 'react';
+import Layout from '../../components/Layout';
+import { Form, Button, Input, Message } from 'semantic-ui-react';
+// Ethereum related imports follow
+// Importing the loaded CampaignFactory contract from our portable factory.js file
+import factory from '../../ethereum/factory';
+
+// And our configured web3 instance from web3.js file
+import web3 from '../../ethereum/web3';
+
+class CampaignNew extends Component {
+  state = {
+    minimumContribution: '',
+    errorMessage: '',
+    currentAccount: '',
+    cuurentBalance: '',
+    loading: false
+  };
+
+  onSubmit = async (event) => {
+    event.preventDefault();
+
+    this.setState({ loading: true, errorMessage: '' });
+
+    // Following to catch error if transaction fails
+    try {
+      const accounts = await web3.eth.getAccounts();
+      await factory.methods
+        .createCampaign(this.state.minimumContribution)
+        .send({from: accounts[0]});
+      } catch (err) {
+        this.setState({ errorMessage: err.message });
+      }
+
+    this.setState({ loading: false });
+  };
+
+  // Following function is just to show the user what account he is using at the moment
+  onEnter = async () => {
+    const accounts = await web3.eth.getAccounts();
+    const balance = await web3.eth.getBalance(accounts[0]);
+    this.setState({ currentAccount: accounts[0], currentBalance: balance });
+  };
+  render() {
+    return (
+      <Layout onEnter={this.onEnter()}>
+        <h3>Create a new campaign:</h3>
+        <h4>(You are at account: {this.state.currentAccount})</h4>
+        <h4>(Your current balance: {this.state.currentBalance} ether)</h4>
+        <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+          <Form.Field>
+            <label>Minimum contribution</label>
+            <Input
+              label="wei"
+              placeholder="Enter an amount in wei"
+              labelPosition="right"
+              value={this.state.minimumContribution}
+              onChange={event => this.setState({minimumContribution: event.target.value})}
+            />
+          </Form.Field>
+
+          <Message error header="Following went wrong while transacting!" content={this.state.errorMessage} />
+          <Button loading={this.state.loading} primary>Create</Button>
+        </Form>
+      </Layout>
+    );
+  }
+}
+
+export default CampaignNew;
