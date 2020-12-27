@@ -5,3 +5,4 @@
 * We then need to figure out how to setup routing for the relevant page view
 * In order to automate the next functionality we add `"dev": "next dev"` in a similar manner what we did with mocha (`"test": "mocha"`) for our testing setup
 * And just like for mocha testing (`npm run test`) we use `npm run dev` to activate next
+* (**Core ingredient respect: Next.js**) *Next.js is a server side redering mechanism*. So it is quite important to write some ethereum-related data fetching on the server side as well. This means our **web3.js** file is not going to work as such. It will throw a **window not defined error** as our Next server does not know about what is happening inside a client's browser.
