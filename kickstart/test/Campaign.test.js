@@ -95,6 +95,41 @@ describe('Campaigns test report', () => {
   });
 
   it('Processes the requests successfully and completely', async () => {
+    // Fist we store recipient's initial balance for our reference
+    const initialBalance = await web3.eth.getBalance(accounts[1]);
 
+    // We make our manager contribute
+    await campaign.methods.contribute().send({
+      from: accounts[0],
+      value: web3.utils.toWei('25', 'ether')
+    });
+
+
+    // Then we create a new request with the recipient from another account
+    await campaign.methods
+      .createRequest('Buy more nasal spray', web3.utils.toWei('20', 'ether'), accounts[1])
+      .send({
+        from: accounts[0],
+        gas: '1000000'
+      });
+    // Then we make the manager to approve the request
+    await campaign.methods.approveRequest(0)
+      .send({
+        from: accounts[0],
+        gas: '1000000'
+      });
+
+    // Now we make the manager finalise the request, this should update the balance of account[1]
+    await campaign.methods.finaliseRequest(0)
+      .send({
+        from: accounts[0],
+        gas: '1000000'
+      });
+
+    // Now we see if the balance of accounts[1] has been updated
+    const finalBalance = await web3.eth.getBalance(accounts[1]);
+    const difference = parseFloat(web3.utils.fromWei(finalBalance, 'ether')) - parseFloat(web3.utils.fromWei(initialBalance, 'ether'));
+
+    assert(20.5 > difference);
   });
 });
