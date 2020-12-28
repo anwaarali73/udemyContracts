@@ -1,7 +1,6 @@
 pragma solidity ^0.4.17;
 
 // Following is an over-arching contract to manage the individual instances of Campaigns
-
 contract CampaignFactory {
     address[] public deployedCampaigns;
 
@@ -111,4 +110,22 @@ contract Campaign {
         // Then we mark the request as complete
         request.complete = true;
     }
+
+    // This functiona is basically to ease the process of showing the relevant
+    // content to the user in the show.js file of our web application
+    function getSummary() public view returns (uint, uint, uint, uint, address) {
+      return (
+          minimumContribution,
+          this.balance,
+          requests.length,
+          approversCount,
+          manager
+        );
+    }
+
+  function getRequestsCount() public view returns (uint) {
+    return (
+        requests.length;
+      );
+  }
 }

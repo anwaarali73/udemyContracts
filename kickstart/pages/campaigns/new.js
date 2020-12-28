@@ -8,6 +8,10 @@ import factory from '../../ethereum/factory';
 // And our configured web3 instance from web3.js file
 import web3 from '../../ethereum/web3';
 
+// Following import is for the dynamic routing that we setup
+// based on next-routes package in our routes.js file in the root directory
+import { Link, Router } from '../../routes';
+
 class CampaignNew extends Component {
   state = {
     minimumContribution: '',
@@ -28,6 +32,9 @@ class CampaignNew extends Component {
       await factory.methods
         .createCampaign(this.state.minimumContribution)
         .send({from: accounts[0]});
+
+        // After the successfull execution of a transaction we re-route to our index.js page as follows
+        Router.pushRoute('/');
       } catch (err) {
         this.setState({ errorMessage: err.message });
       }

@@ -4,10 +4,11 @@ import React, { Component } from 'react';
 import { Card, Button } from 'semantic-ui-react';
 import Layout from '../components/Layout.js';
 
-
-
 // Now we import our deployed instance of CampaignFactory from factory.js
 import factory from '../ethereum/factory';
+
+// Link tag is for user navigation that we import from our routes.js file
+import { Link } from '../routes';
 
 class CampaignIndex extends Component {
   // For next we replace react specific componentDidMount with static getInitialProps
@@ -35,7 +36,11 @@ class CampaignIndex extends Component {
       return {
         // Following is a semantic ui specific syntax for Cards.Group
         header: 'Campaign at: ' + address,
-        description: <a>View the campaign</a>,
+        description: (
+          <Link route={`/campaigns/${address}`}>
+            <a>View the campaign</a>
+          </Link>
+        ),
         // To make the card fit the window width
         fluid: true
       }
@@ -49,12 +54,16 @@ class CampaignIndex extends Component {
       <Layout>
           <div>
             <h3>Open Campaigns: {this.props.campaigns.length}</h3>
-            <Button
-              floated="right"
-              content="Create a new campaign"
-              icon="add"
-              primary
-            />
+            <Link route="/campaigns/new">
+              <a>
+                <Button
+                  floated="right"
+                  content="Create a new campaign"
+                  icon="add"
+                  primary
+                />
+              </a>
+            </Link>
             {this.renderCampaigns()}
           </div>
       </Layout>

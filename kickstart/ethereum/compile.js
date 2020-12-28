@@ -5,6 +5,7 @@
 
 const path = require('path');
 const solc = require('solc');
+console.log(solc);
 const fs = require('fs-extra');
 
 // first we remove the build directory if it already exists
@@ -15,9 +16,11 @@ fs.removeSync(buildPath);
 
 // Path to our smart contract file
 const campaignPath = path.resolve(__dirname, 'contracts', 'Campaign.sol');
+//console.log(campaignPath);
 
 // Now we read in the source code of from our contract file with the contract path and text encoding arguments
 const source = fs.readFileSync(campaignPath, 'utf8');
+//console.log(source);
 
 // Now the actual compilation step
 // Output will contain our CampaignFactory and Campaign contracts
