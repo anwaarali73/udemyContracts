@@ -13,7 +13,7 @@ import CampaignFactory from './build/CampaignFactory.json';
 // Now we load up this contract at the specified address on our *local* blockchain
 const instance = new web3.eth.Contract(
   JSON.parse(CampaignFactory.interface),
-  '0x6D2D1CED74E4fAd7508A842017eaf5f93f63931B'
+  '0x4e2e9E62b4F1671Ef45b36EA9d2c430e8f3c8fEd'
  );
 
 export default instance;

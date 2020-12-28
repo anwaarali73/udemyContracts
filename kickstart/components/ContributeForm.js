@@ -1,0 +1,71 @@
+// To enable users to have the ability to contribute while looking at a specific
+// campaign's details. This will be used in show.js file
+
+// We will be receiving the address of the relevant and currently redered campaign
+// from show.js and we will send user's money to this specific campaign's address
+
+import React, { Component } from 'react';
+import { Form, Input, Massage, Button } from 'semantic-ui-react';
+import web3 from '../ethereum/web3';
+
+// Following we will import campaign.js to load up the relevant campaign whose
+// address we are receiving from show.js and is currently being rendered
+import Campaign from '../ethereum/campaign';
+
+import { Router } from '../routes';
+
+class ContributeForm extends Component {
+  state = {
+    currentAccount:'',
+    currentBalance:'',
+    value: ''
+  };
+
+  onSubmit = async (event) => {
+    event.preventDefault();
+    // Now we load up our relevant instance of the campaign
+    const campaign = Campaign(this.props.address);
+    try
+    {
+      await campaign.methods.contribute().send({
+      from: this.state.currentAccount,
+      value: web3.utils.toWei(this.state.value, 'ether')
+      });
+      // After the above we refresh the page to show the updated campaign data
+      Router.replaceRoute(`/campaigns/${this.props.address}`);
+    } catch (err) {
+      //return
+    }
+  };
+
+  // Following function is just to show the user what account he is using at the moment
+  onEnter = async () => {
+    const accounts = await web3.eth.getAccounts();
+    const balance = await web3.eth.getBalance(accounts[0]);
+    this.setState({ currentAccount: accounts[0], currentBalance: balance });
+  };
+  render() {
+    return (
+      <div onEnter={this.onEnter()}>
+      <Form onSubmit={this.onSubmit}>
+        <Form.Field>
+          <label>Contribute to this campaign: </label>
+          <Input
+            value={this.state.value}
+            onChange={event => this.setState({value: event.target.value})}
+            label='ether'
+            labelPosition='right'
+            placeholder='Enter amount in ether'
+          />
+        </Form.Field>
+
+        <Button primary>Contribute</Button>
+      </Form>
+      <h4>Your account: {this.state.currentAccount}</h4>
+      <h4>You balance: {this.state.currentBalance}</h4>
+    </div>
+    );
+  }
+}
+
+export default ContributeForm;

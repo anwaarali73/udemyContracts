@@ -5,7 +5,6 @@
 
 const path = require('path');
 const solc = require('solc');
-console.log(solc);
 const fs = require('fs-extra');
 
 // first we remove the build directory if it already exists

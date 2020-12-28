@@ -52,8 +52,9 @@ class CampaignNew extends Component {
     return (
       <Layout onEnter={this.onEnter()}>
         <h3>Create a new campaign:</h3>
-        <h4>(You are at account: {this.state.currentAccount})</h4>
-        <h4>(Your current balance: {this.state.currentBalance} ether)</h4>
+        <h4>You are at account: {this.state.currentAccount}</h4>
+        <h4>Your current balance: {this.state.currentBalance} ether</h4>
+        <hr />
         <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
           <Form.Field>
             <label>Minimum contribution</label>
