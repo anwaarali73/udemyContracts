@@ -4,6 +4,26 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -27,39 +47,62 @@ var _jsxFileName = '/home/ali/udemyContracts/kickstart/components/Header.js';
 
 // For a component prop like in <Menu> below we have {jsx here}
 // and {{actual object literal like css styling in our case}}
-exports.default = function () {
-  return _react2.default.createElement(_semanticUiReact.Menu, { style: { marginTop: '10px' }, __source: {
-      fileName: _jsxFileName,
-      lineNumber: 14
+
+var Header = function (_Component) {
+  (0, _inherits3.default)(Header, _Component);
+
+  function Header(props) {
+    (0, _classCallCheck3.default)(this, Header);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (Header.__proto__ || (0, _getPrototypeOf2.default)(Header)).call(this, props));
+
+    _this.state = {
+      numberOfCampaigns: _this.props.numberOfCampaigns
+    };
+    return _this;
+  }
+
+  (0, _createClass3.default)(Header, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(_semanticUiReact.Menu, { style: { marginTop: '10px' }, __source: {
+          fileName: _jsxFileName,
+          lineNumber: 22
+        }
+      }, _react2.default.createElement(_routes.Link, { route: '/', __source: {
+          fileName: _jsxFileName,
+          lineNumber: 23
+        }
+      }, _react2.default.createElement('a', { className: 'item', __source: {
+          fileName: _jsxFileName,
+          lineNumber: 24
+        }
+      }, 'FinalCoin')), _react2.default.createElement(_semanticUiReact.Menu.Menu, { position: 'right', __source: {
+          fileName: _jsxFileName,
+          lineNumber: 29
+        }
+      }, _react2.default.createElement(_routes.Link, { route: '/', __source: {
+          fileName: _jsxFileName,
+          lineNumber: 30
+        }
+      }, _react2.default.createElement('a', { className: 'item', __source: {
+          fileName: _jsxFileName,
+          lineNumber: 31
+        }
+      }, 'Open campaigns (', this.state.numberOfCampaigns, ')')), _react2.default.createElement(_routes.Link, { route: '/campaigns/new', __source: {
+          fileName: _jsxFileName,
+          lineNumber: 36
+        }
+      }, _react2.default.createElement('a', { className: 'item', __source: {
+          fileName: _jsxFileName,
+          lineNumber: 37
+        }
+      }, '+'))));
     }
-  }, _react2.default.createElement(_routes.Link, { route: '/', __source: {
-      fileName: _jsxFileName,
-      lineNumber: 15
-    }
-  }, _react2.default.createElement('a', { className: 'item', __source: {
-      fileName: _jsxFileName,
-      lineNumber: 16
-    }
-  }, 'FinalCoin')), _react2.default.createElement(_semanticUiReact.Menu.Menu, { position: 'right', __source: {
-      fileName: _jsxFileName,
-      lineNumber: 21
-    }
-  }, _react2.default.createElement(_routes.Link, { route: '/', __source: {
-      fileName: _jsxFileName,
-      lineNumber: 22
-    }
-  }, _react2.default.createElement('a', { className: 'item', __source: {
-      fileName: _jsxFileName,
-      lineNumber: 23
-    }
-  }, 'Open campaigns')), _react2.default.createElement(_routes.Link, { route: '/campaigns/new', __source: {
-      fileName: _jsxFileName,
-      lineNumber: 28
-    }
-  }, _react2.default.createElement('a', { className: 'item', __source: {
-      fileName: _jsxFileName,
-      lineNumber: 29
-    }
-  }, '+'))));
-};
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbXBvbmVudHMvSGVhZGVyLmpzIl0sIm5hbWVzIjpbIlJlYWN0IiwiTWVudSIsImZhY3RvcnkiLCJMaW5rIiwibWFyZ2luVG9wIl0sIm1hcHBpbmdzIjoiOzs7Ozs7QUFBQSxBQUFPOzs7O0FBQ1AsQUFBUzs7QUFDVCxBQUFPLEFBQWE7Ozs7QUFNcEIsQUFBUyxBQUFZOzs7Ozs7QUFKckI7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSxBQUNBO2tCQUFlLFlBQU0sQUFDbkI7eUJBQ0UsQUFBQyx1Q0FBSyxPQUFPLEVBQUUsV0FBZixBQUFhLEFBQVk7Z0JBQXpCO2tCQUFBLEFBQ0U7QUFERjtHQUFBLGtCQUNFLEFBQUMsOEJBQUssT0FBTixBQUFZO2dCQUFaO2tCQUFBLEFBQ0U7QUFERjtxQkFDRSxjQUFBLE9BQUcsV0FBSCxBQUFhO2dCQUFiO2tCQUFBO0FBQUE7S0FGSixBQUNFLEFBQ0UsQUFLRiwrQkFBQyxjQUFELHNCQUFBLEFBQU0sUUFBSyxVQUFYLEFBQW9CO2dCQUFwQjtrQkFBQSxBQUNBO0FBREE7cUJBQ0EsQUFBQyw4QkFBSyxPQUFOLEFBQVk7Z0JBQVo7a0JBQUEsQUFDRTtBQURGO3FCQUNFLGNBQUEsT0FBRyxXQUFILEFBQWE7Z0JBQWI7a0JBQUE7QUFBQTtLQUZGLEFBQ0EsQUFDRSxBQUtGLG9DQUFBLEFBQUMsOEJBQUssT0FBTixBQUFZO2dCQUFaO2tCQUFBLEFBQ0U7QUFERjtxQkFDRSxjQUFBLE9BQUcsV0FBSCxBQUFhO2dCQUFiO2tCQUFBO0FBQUE7S0FoQk4sQUFDRSxBQU9FLEFBT0EsQUFDRSxBQU9QO0FBeEJEIiwiZmlsZSI6IkhlYWRlci5qcyIsInNvdXJjZVJvb3QiOiIvaG9tZS9hbGkvdWRlbXlDb250cmFjdHMva2lja3N0YXJ0In0=
+  }]);
+
+  return Header;
+}(_react.Component);
+
+exports.default = Header;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbXBvbmVudHMvSGVhZGVyLmpzIl0sIm5hbWVzIjpbIlJlYWN0IiwiQ29tcG9uZW50IiwiTWVudSIsImZhY3RvcnkiLCJMaW5rIiwiSGVhZGVyIiwicHJvcHMiLCJzdGF0ZSIsIm51bWJlck9mQ2FtcGFpZ25zIiwibWFyZ2luVG9wIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQUFBLEFBQU8sQUFBUzs7OztBQUNoQixBQUFTOztBQUNULEFBQU8sQUFBYTs7OztBQU1wQixBQUFTLEFBQVk7Ozs7OztBQUpyQjtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBOztJQUVNLEE7a0NBQ0o7O2tCQUFBLEFBQVksT0FBTzt3Q0FBQTs7c0lBQUEsQUFDWCxBQUNSOztVQUFBLEFBQUs7eUJBQ2dCLE1BQUEsQUFBSyxNQUhQLEFBRW5CLEFBQWEsQUFDbUI7QUFEbkIsQUFDWDtXQUVEOzs7Ozs2QkFDUSxBQUNQOzZCQUNFLEFBQUMsdUNBQUssT0FBTyxFQUFFLFdBQWYsQUFBYSxBQUFZO29CQUF6QjtzQkFBQSxBQUNFO0FBREY7T0FBQSxrQkFDRSxBQUFDLDhCQUFLLE9BQU4sQUFBWTtvQkFBWjtzQkFBQSxBQUNFO0FBREY7eUJBQ0UsY0FBQSxPQUFHLFdBQUgsQUFBYTtvQkFBYjtzQkFBQTtBQUFBO1NBRkosQUFDRSxBQUNFLEFBS0YsK0JBQUMsY0FBRCxzQkFBQSxBQUFNLFFBQUssVUFBWCxBQUFvQjtvQkFBcEI7c0JBQUEsQUFDQTtBQURBO3lCQUNBLEFBQUMsOEJBQUssT0FBTixBQUFZO29CQUFaO3NCQUFBLEFBQ0U7QUFERjt5QkFDRSxjQUFBLE9BQUcsV0FBSCxBQUFhO29CQUFiO3NCQUFBO0FBQUE7U0FDbUIseUJBQUEsQUFBSyxNQUR4QixBQUM4QixtQkFIaEMsQUFDQSxBQUNFLEFBS0YsdUJBQUEsQUFBQyw4QkFBSyxPQUFOLEFBQVk7b0JBQVo7c0JBQUEsQUFDRTtBQURGO3lCQUNFLGNBQUEsT0FBRyxXQUFILEFBQWE7b0JBQWI7c0JBQUE7QUFBQTtTQWhCTixBQUNFLEFBT0UsQUFPQSxBQUNFLEFBT1A7Ozs7O0FBL0JrQixBLEFBa0NyQjs7a0JBQUEsQUFBZSIsImZpbGUiOiJIZWFkZXIuanMiLCJzb3VyY2VSb290IjoiL2hvbWUvYWxpL3VkZW15Q29udHJhY3RzL2tpY2tzdGFydCJ9

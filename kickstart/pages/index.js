@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { Card, Button } from 'semantic-ui-react';
 import Layout from '../components/Layout.js';
+import web3 from '../ethereum/web3';
 
 // Now we import our deployed instance of CampaignFactory from factory.js
 import factory from '../ethereum/factory';
@@ -18,8 +19,9 @@ class CampaignIndex extends Component {
   static async getInitialProps() {
     // Following call gives us addresses of all the deployed campaigns
     const campaigns = await factory.methods.getDeployedCampaigns().call();
+    const blockNumber = await web3.eth.getBlockNumber();
     // Following is the same as return {campaigns: campaigns}
-    return { campaigns };
+    return { campaigns, blockNumber };
   }
   // async componentDidMount() {
   //   const campaigns = await factory.methods.getDeployedCampaigns().call();
@@ -51,9 +53,10 @@ class CampaignIndex extends Component {
   render() {
 
     return (
-      <Layout>
+      <Layout numberOfCampaigns={this.props.campaigns.length}>
           <div>
             <h3>Open Campaigns: {this.props.campaigns.length}</h3>
+            <h3>Current block: {this.props.blockNumber} </h3>
             <Link route="/campaigns/new">
               <a>
                 <Button

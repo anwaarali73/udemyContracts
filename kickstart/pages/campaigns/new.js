@@ -18,8 +18,13 @@ class CampaignNew extends Component {
     errorMessage: '',
     currentAccount: '',
     cuurentBalance: '',
-    loading: false
+    loading: false,
   };
+
+  static async getInitialProps() {
+    const campaigns = await factory.methods.getDeployedCampaigns().call();
+    return { campaigns };
+  }
 
   onSubmit = async (event) => {
     event.preventDefault();
@@ -46,11 +51,12 @@ class CampaignNew extends Component {
   onEnter = async () => {
     const accounts = await web3.eth.getAccounts();
     const balance = await web3.eth.getBalance(accounts[0]);
-    this.setState({ currentAccount: accounts[0], currentBalance: balance });
+    this.setState({ currentAccount: accounts[0], currentBalance: balance});
   };
   render() {
     return (
-      <Layout onEnter={this.onEnter()}>
+      <div onEnter={this.onEnter()}>
+      <Layout numberOfCampaigns={this.props.campaigns.length}>
         <h3>Create a new campaign:</h3>
         <h4>You are at account: {this.state.currentAccount}</h4>
         <h4>Your current balance: {this.state.currentBalance} ether</h4>
@@ -71,6 +77,7 @@ class CampaignNew extends Component {
           <Button loading={this.state.loading} primary>Create</Button>
         </Form>
       </Layout>
+      </div>
     );
   }
 }

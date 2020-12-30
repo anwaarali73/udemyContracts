@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Menu } from 'semantic-ui-react';
 import factory from '../ethereum/factory';
 
@@ -9,28 +9,39 @@ import factory from '../ethereum/factory';
 import { Link } from '../routes';
 // For a component prop like in <Menu> below we have {jsx here}
 // and {{actual object literal like css styling in our case}}
-export default () => {
-  return(
-    <Menu style={{ marginTop:'10px' }}>
-      <Link route="/">
-        <a className="item">
-          FinalCoin
-        </a>
-      </Link>
 
-      <Menu.Menu position="right">
-      <Link route="/">
-        <a className="item">
-          Open campaigns
-        </a>
-      </Link>
+class Header extends Component {
+  constructor(props) {
+    super(props);
+  this.state = {
+    numberOfCampaigns: this.props.numberOfCampaigns
+  };
+  }
+  render() {
+    return(
+      <Menu style={{ marginTop:'10px' }}>
+        <Link route="/">
+          <a className="item">
+            FinalCoin
+          </a>
+        </Link>
 
-      <Link route="/campaigns/new">
-        <a className="item">
-          +
-        </a>
-      </Link>
-      </Menu.Menu>
-    </Menu>
-  );
-};
+        <Menu.Menu position="right">
+        <Link route="/">
+          <a className="item">
+            Open campaigns ({this.state.numberOfCampaigns})
+          </a>
+        </Link>
+
+        <Link route="/campaigns/new">
+          <a className="item">
+            +
+          </a>
+        </Link>
+        </Menu.Menu>
+      </Menu>
+    );
+  }
+}
+
+export default Header;

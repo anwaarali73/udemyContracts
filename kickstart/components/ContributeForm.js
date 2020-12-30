@@ -5,7 +5,7 @@
 // from show.js and we will send user's money to this specific campaign's address
 
 import React, { Component } from 'react';
-import { Form, Input, Massage, Button } from 'semantic-ui-react';
+import { Form, Input, Message, Button } from 'semantic-ui-react';
 import web3 from '../ethereum/web3';
 
 // Following we will import campaign.js to load up the relevant campaign whose
@@ -18,11 +18,15 @@ class ContributeForm extends Component {
   state = {
     currentAccount:'',
     currentBalance:'',
-    value: ''
+    value: '',
+    loading: false,
+    errorMessage: ''
   };
 
   onSubmit = async (event) => {
     event.preventDefault();
+
+    this.setState({ loading: true, errorMessage:'' });
     // Now we load up our relevant instance of the campaign
     const campaign = Campaign(this.props.address);
     try
@@ -34,12 +38,14 @@ class ContributeForm extends Component {
       // After the above we refresh the page to show the updated campaign data
       Router.replaceRoute(`/campaigns/${this.props.address}`);
     } catch (err) {
-      //return
+      this.setState({ errorMessage: err.message });
     }
+    // We set value: '' to clear the contribute form after the page reload
+    this.setState({ loading: false, value: '' });
   };
 
   // Following function is just to show the user what account he is using at the moment
-  onEnter = async () => {
+  onEnter = async () => {   // !Console gives some warning regarding the usage of this function in <div> if works fine but see if you can fix the warning!
     const accounts = await web3.eth.getAccounts();
     const balance = await web3.eth.getBalance(accounts[0]);
     this.setState({ currentAccount: accounts[0], currentBalance: balance });
@@ -47,7 +53,7 @@ class ContributeForm extends Component {
   render() {
     return (
       <div onEnter={this.onEnter()}>
-      <Form onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
         <Form.Field>
           <label>Contribute to this campaign: </label>
           <Input
@@ -59,7 +65,18 @@ class ContributeForm extends Component {
           />
         </Form.Field>
 
-        <Button primary>Contribute</Button>
+        <Message
+          error
+          header='Following went wrong while transacting!'
+          content={this.state.errorMessage}
+        />
+
+        <Button
+          primary
+          loading={this.state.loading}
+          >
+            Contribute
+        </Button>
       </Form>
       <h4>Your account: {this.state.currentAccount}</h4>
       <h4>You balance: {this.state.currentBalance}</h4>
