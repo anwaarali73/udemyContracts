@@ -96,17 +96,17 @@ class RequestIndex extends Component {
           <h4>You are at account: {this.state.currentAccount}</h4>
           <h4>Your balance: {this.state.currentBalance}</h4>
         <hr />
-        <Link route={`/campaigns/${this.props.address}`}>
-          <a>
-            <Button secondary icon="left chevron" content="Back to campaign details" />
-          </a>
-        </Link>
         <Link route={`/campaigns/${this.props.address}/requests/new`}>
           <a>
-            <Button primary labelPosition="right" icon="right chevron" content="Create a request" />
+            <Button primary floated='right' style={{ marginBottom: 10 }} labelPosition="right" icon="right chevron" content="Create a request" />
           </a>
         </Link>
-
+        <Link route={`/campaigns/${this.props.address}`}>
+          <a>
+            <Button secondary floated='right' style={{ marginBottom: 10 }} icon="left chevron" content="Back to campaign details" />
+          </a>
+        </Link>
+        <div><h5>Found {this.props.requestCount} requests.</h5></div>
         <Table>
           <Header>
             <Row>
