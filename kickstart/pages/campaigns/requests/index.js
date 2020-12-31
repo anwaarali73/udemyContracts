@@ -3,6 +3,7 @@ import Layout from '../../../components/Layout';
 import { Link } from '../../../routes';
 import { Button, Table } from 'semantic-ui-react';
 import factory from '../../../ethereum/factory';
+import web3 from '../../../ethereum/web3';
 // We import our already deployed Campaign instance and load it up here
 import Campaign from '../../../ethereum/campaign';
 
@@ -11,6 +12,10 @@ import Campaign from '../../../ethereum/campaign';
 import RequestRow from '../../../components/RequestRow';
 
 class RequestIndex extends Component {
+  state = {
+    currentAccount:'',
+    currentBalance:''
+  };
   // getInitialProps is different from the general props. getInitialProps referes to the data
   // we send to this component from the outside
   static async getInitialProps(props) {
@@ -38,6 +43,8 @@ class RequestIndex extends Component {
     // in order to finalise it
     const approversCount = await campaign.methods.approversCount().call();
 
+    // Some general managerial information below to finalise the request
+    const manager = await campaign.methods.manager().call();
     // And now the extraction of all the requests' structs in the form of of an array of structs
     // Index would be the index of a request
     const requests = await Promise.all(
@@ -50,7 +57,7 @@ class RequestIndex extends Component {
     //console.log(requests);
 
     // Following is the same as return { address: address }; // when key values are the same we can shorten the syntax like below
-    return { address, campaigns, requests, requestCount, approversCount };   // This will be passed below as props for the render methods
+    return { address, campaigns, requests, requestCount, approversCount, manager };   // This will be passed below as props for the render methods
   }
 
   // Following helper function is to configure our /components/RequestRow.js file
@@ -70,12 +77,25 @@ class RequestIndex extends Component {
     });
   }
 
+  // Following function is just to show the user what account he is using at the moment
+  onEnter = async () => { // This outputs a warning in <div> need to figure it out
+    const accounts = await web3.eth.getAccounts();
+    const balance = await web3.eth.getBalance(accounts[0]);
+    this.setState({ currentAccount: accounts[0], currentBalance: balance});
+  };
+
   render() {
     // Following is the fancy es2015 destructuring for the Table tag to make its use easier
     const { Header, Row, HeaderCell, Body } = Table;
     return (
+      <div onEnter={this.onEnter()}>
       <Layout numberOfCampaigns={this.props.campaigns.length}>
-        <h3>Open requests for campaign at: {this.props.address}</h3>
+          <h3>Open requests for campaign at: {this.props.address}</h3>
+          <h4>51% votes are required for any request to be approved.</h4>
+          <h4>Campaign manager: {this.props.manager} (only the manager can finalise the request)</h4>
+          <h4>You are at account: {this.state.currentAccount}</h4>
+          <h4>Your balance: {this.state.currentBalance}</h4>
+        <hr />
         <Link route={`/campaigns/${this.props.address}`}>
           <a>
             <Button secondary icon="left chevron" content="Back to campaign details" />
@@ -104,6 +124,7 @@ class RequestIndex extends Component {
           </Body>
         </Table>
       </Layout>
+    </div>
     );
   }
 }
