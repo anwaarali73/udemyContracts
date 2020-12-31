@@ -22,7 +22,7 @@ class Header extends Component {
       <Menu style={{ marginTop:'10px' }}>
         <Link route="/">
           <a className="item">
-            FinalCoin
+            CommunityCoin
           </a>
         </Link>
 

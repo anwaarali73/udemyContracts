@@ -20,8 +20,9 @@ class CampaignIndex extends Component {
     // Following call gives us addresses of all the deployed campaigns
     const campaigns = await factory.methods.getDeployedCampaigns().call();
     const blockNumber = await web3.eth.getBlockNumber();
+    const gasPrice = await web3.eth.getGasPrice();
     // Following is the same as return {campaigns: campaigns}
-    return { campaigns, blockNumber };
+    return { campaigns, blockNumber, gasPrice };
   }
   // async componentDidMount() {
   //   const campaigns = await factory.methods.getDeployedCampaigns().call();
@@ -57,6 +58,7 @@ class CampaignIndex extends Component {
           <div>
             <h3>Open Campaigns: {this.props.campaigns.length}</h3>
             <h3>Current block: {this.props.blockNumber} </h3>
+            <h3>Gas price: {this.props.gasPrice} </h3>
             <Link route="/campaigns/new">
               <a>
                 <Button

@@ -23,11 +23,11 @@ contract Campaign {
         uint value;
         address recipient;
         bool complete;
-        uint approvalCount;
+        uint approvalCount;   // This is request specfic   // These are the actual yes votes by the approvers
         mapping(address => bool) approvals; // Okay this is to keep track of approvers who already have voted yes on a particular request.bit confusing for now | It could be like request specific approvals. How is it different from approvers?
     }
 
-    Request[] public requests;
+    Request[] public requests;   // We will make use of it in RequestIndex component for our web app. It is at /campaigns/requests/index.js
     address public manager;
     uint public minimumContribution;
     //address[] public approvers;   // More cost efficient (in terms of gas) is to use mappings instead
@@ -35,7 +35,7 @@ contract Campaign {
     // Following we will map addresses to boolean to see which addresses have contributed
 
     mapping(address => bool) public approvers;
-    uint approversCount; // keep track of number of all the contributors
+    uint public approversCount; // keep track of number of all the contributors  // This is campaign specific
 
     // Following is a function modifier used to implement some restrictions of checks specified in its body to other functions
     modifier restricted() {

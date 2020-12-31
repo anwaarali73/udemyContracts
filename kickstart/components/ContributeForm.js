@@ -79,7 +79,7 @@ class ContributeForm extends Component {
         </Button>
       </Form>
       <h4>Your account: {this.state.currentAccount}</h4>
-      <h4>You balance: {this.state.currentBalance}</h4>
+      <h4>Your balance: {this.state.currentBalance} ether</h4>
     </div>
     );
   }

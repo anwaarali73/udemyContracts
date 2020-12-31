@@ -13,9 +13,11 @@ class newRequest extends Component {
     value:'',
     recipient:'',
     errorMessage:'',
-    loading:'',
+    loading:false,
     currentAccount:'',
     currentBalance:'',
+    campaign: '',
+    manager: ''
   };
 
   // We need the address of the relevant campaign we are interested in and that is
@@ -27,11 +29,53 @@ class newRequest extends Component {
     return { address, campaigns };
   }
 
+  onCurrentCreds = async () => {
+    const accounts = await web3.eth.getAccounts();
+    const balance = await web3.eth.getBalance(accounts[0]);
+    // First we load up the relevant instance of the campaign at the specified address that we are receiving in our
+    // getInitialProps
+    const campaign = await Campaign(this.props.address);
+    const manager = await campaign.methods.manager().call();
+    this.setState({ currentAccount: accounts[0], currentBalance: balance, campaign, manager });
+  }
+
+  onSubmit = async (event) => {
+    event.preventDefault();
+
+    this.setState({ loading: true, errorMessage: '' });
+    try {
+      // Now we destructure our relevant state constants for the createRequest parameters
+
+      const { campaign, description, value, recipient } = this.state;
+
+      // Now we create a request for funding for this campaign
+      await campaign.methods.createRequest(
+        description,
+        web3.utils.toWei(value, 'ether'),
+        recipient
+      ).send({ from: this.state.currentAccount });
+
+      // After the successfull request creation we redirect our users back to the request index page
+      Router.pushRoute(`/campaigns/${this.props.address}/requests`);
+    } catch (err) {
+        this.setState({ errorMessage: err.message });
+    }
+    this.setState({ loading: false });
+  };
+
   render() {
     return(
-      <Layout numberOfCampaigns={this.props.campaigns.length}>
+      <Layout numberOfCampaigns={this.props.campaigns.length} onCurrentCreds={this.onCurrentCreds()}>
+      <Link route={`/campaigns/${this.props.address}/requests`}>
+        <a>
+          <Button secondary icon="left chevron" content="Back to campaign requests" />
+        </a>
+      </Link>
       <h3>Create a new request for campaign at: {this.props.address}</h3>
-      <Form>
+      <h3>Campaign manager: {this.state.manager} (only the manager can create requests)</h3>
+      <h4>You are at account: {this.state.currentAccount}</h4>
+      <h4>Your balance is: {this.state.currentBalance} ether</h4>
+      <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
         <Form.Field>
           <label>Description: </label>
           <Input
@@ -63,7 +107,13 @@ class newRequest extends Component {
           />
         </Form.Field>
 
-        <Button primary>Create request</Button>
+        <Message
+          error
+          header='Following went wrong while transacting'
+          content={this.state.errorMessage}
+        />
+
+        <Button primary loading={this.state.loading} content="Create request" />
       </Form>
       </Layout>
     );
