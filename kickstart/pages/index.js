@@ -12,6 +12,20 @@ import factory from '../ethereum/factory';
 import { Link } from '../routes';
 
 class CampaignIndex extends Component {
+  state = {
+    currentAccount: '',
+    currentBalance: '',
+    currentBlock: '',
+    numberOfTransactions: ''
+  };
+  onEnter = async () => {
+    const accounts = await web3.eth.getAccounts();
+    const currentAccount = accounts[0];
+    const currentBalance = await web3.eth.getBalance(accounts[0]);
+    const numberOfTransactions = await web3.eth.getTransactionCount(accounts[0]);
+    const currentBlock = await web3.eth.getBlockNumber();
+    this.setState({currentAccount, currentBalance, numberOfTransactions, currentBlock});
+  };
   // For next we replace react specific componentDidMount with static getInitialProps
   // which is specific to next js. It does the (ethereum-related) data fetching here
   // for the compenent without rendering it (thus making it more cost effective) and passes the fetched data to the props of
@@ -19,10 +33,9 @@ class CampaignIndex extends Component {
   static async getInitialProps() {
     // Following call gives us addresses of all the deployed campaigns
     const campaigns = await factory.methods.getDeployedCampaigns().call();
-    const blockNumber = await web3.eth.getBlockNumber();
     const gasPrice = await web3.eth.getGasPrice();
     // Following is the same as return {campaigns: campaigns}
-    return { campaigns, blockNumber, gasPrice };
+    return { campaigns, gasPrice };
   }
   // async componentDidMount() {
   //   const campaigns = await factory.methods.getDeployedCampaigns().call();
@@ -52,13 +65,15 @@ class CampaignIndex extends Component {
   }
 
   render() {
-
     return (
-      <Layout numberOfCampaigns={this.props.campaigns.length}>
+      <Layout numberOfCampaigns={this.props.campaigns.length} onEnter={this.onEnter()}>
           <div>
             <h3>Open Campaigns: {this.props.campaigns.length}</h3>
-            <h3>Current block: {this.props.blockNumber} </h3>
+            <h3>Current block: {this.state.currentBlock} </h3>
             <h3>Gas price: {this.props.gasPrice} </h3>
+            <h3>Your account: {this.state.currentAccount}</h3>
+            <h3>Your balance: {this.state.currentBalance}</h3>
+            <h3>Your total transactions: {this.state.numberOfTransactions}</h3>
             <Link route="/campaigns/new">
               <a>
                 <Button

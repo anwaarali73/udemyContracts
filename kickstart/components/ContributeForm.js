@@ -18,6 +18,8 @@ class ContributeForm extends Component {
   state = {
     currentAccount:'',
     currentBalance:'',
+    currentBlock: '',
+    numberOfTransactions: '',
     value: '',
     loading: false,
     errorMessage: ''
@@ -48,7 +50,9 @@ class ContributeForm extends Component {
   onEnter = async () => {   // !Console gives some warning regarding the usage of this function in <div> if works fine but see if you can fix the warning!
     const accounts = await web3.eth.getAccounts();
     const balance = await web3.eth.getBalance(accounts[0]);
-    this.setState({ currentAccount: accounts[0], currentBalance: balance });
+    const numberOfTransactions = await web3.eth.getTransactionCount(accounts[0]);
+    const currentBlock = await web3.eth.getBlockNumber();
+    this.setState({ currentAccount: accounts[0], currentBalance: balance, numberOfTransactions, currentBlock });
   };
   render() {
     return (
@@ -78,8 +82,10 @@ class ContributeForm extends Component {
             Contribute
         </Button>
       </Form>
+      <h4>Current block: {this.state.currentBlock}</h4>
       <h4>Your account: {this.state.currentAccount}</h4>
       <h4>Your balance: {this.state.currentBalance} ether</h4>
+      <h4>Your total transactions: {this.state.numberOfTransactions}</h4>
     </div>
     );
   }
