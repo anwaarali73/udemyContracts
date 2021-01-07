@@ -57,6 +57,7 @@ class newRequest extends Component {
 
       // After the successfull request creation we redirect our users back to the request index page
       Router.pushRoute(`/campaigns/${this.props.address}/requests`);
+      this.setState({ campaignTime });
     } catch (err) {
         this.setState({ errorMessage: err.message });
     }

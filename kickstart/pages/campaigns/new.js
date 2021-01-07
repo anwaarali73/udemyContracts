@@ -18,7 +18,7 @@ class CampaignNew extends Component {
     errorMessage: '',
     currentAccount: '',
     cuurentBalance: '',
-    loading: false,
+    loading: false
   };
 
   static async getInitialProps() {
