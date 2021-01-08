@@ -1,12 +1,18 @@
 pragma solidity ^0.4.17;
+import "github.com/provable-things/ethereum-api/provableAPI_0.4.25.sol";
 
 // Following is an over-arching contract to manage the individual instances of Campaigns
 contract CampaignFactory {
     address[] public deployedCampaigns;
+    address public overAllOwner;
+
+    function CampaignFactory() public {
+        overAllOwner = msg.sender;
+    }
 
     // Following argument is for the constructor of the Campaign contract below.
     function createCampaign(uint minimum) public {
-        address newCampaign = new Campaign(minimum, msg.sender);
+        address newCampaign = new Campaign(minimum, msg.sender, overAllOwner);
         deployedCampaigns.push(newCampaign);
     }
 
@@ -19,6 +25,10 @@ contract CampaignFactory {
 
 contract UpdateCampaign {
 
+    address public Owner;   // Overall owner of the system; capable of changing the ownership of campains and invoking delegate contracts
+    address public oracle;
+    string public oracleResult;
+    bytes32 public provableID;
     // This is just a definition you then have to declare/instantiate different variables of this type (struct)
     struct Request {
         string description;
@@ -37,6 +47,7 @@ contract UpdateCampaign {
     // Following we will map addresses to boolean to see which addresses have contributed
     uint256 public total;
     mapping(address => bool) public approvers;
+    uint public approversCount; // keep track of number of all the contributors  // This is campaign specific
 
 
     function UpdateCampaign() public {}
@@ -50,10 +61,12 @@ contract UpdateCampaign {
     }
 }
 
-// Get outside measurement data : Oracle implementation
+contract Campaign is usingProvable {
 
-contract Campaign {
-
+    address public Owner;   // Overall owner of the system; capable of changing the ownership of campains and invoking delegate contracts
+    address public oracle;
+    string public oracleResult;
+    bytes32 public provableID;
     // This is just a definition you then have to declare/instantiate different variables of this type (struct)
     struct Request {
         string description;
@@ -80,9 +93,26 @@ contract Campaign {
         _;
     }
 
-    function Campaign(uint minimum, address creator) public {
+    // Following is a function modifier used to restrict the deleate calls to the overall owner of the system
+    modifier forOwner() {
+        require(msg.sender == Owner); // Would be used for control purposes and for sensitive decision-making function calls ~ your overarching decision making idea
+        _;
+    }
+
+    function Campaign(uint minimum, address creator, address _overAllOwner) public {
+        OAR = OracleAddrResolverI(0x93F40138E4b1515a81d76217fa0aab02D68B1c36);   // From ethereum bridge instance
         manager = creator;   // Creator is the address of the node who invokes the createCampaign function in the above contract
         minimumContribution = minimum;
+        Owner = _overAllOwner;
+    }
+
+    function getOutsideMeasurement() public payable {
+        provableID = provable_query("WolframAlpha", "square root of 1225");
+    }
+
+    function __callback(bytes32 _provableID, string _result) public {
+        if(msg.sender != provable_cbAddress()) revert();
+        oracleResult = _result;
     }
 
     function contribute() public payable {
@@ -164,11 +194,15 @@ contract Campaign {
     return requests.length;
   }
 
-    function changeOwnership(address updateContract, address newOwner) public {
+    function changeOwnership(address updateContract, address newOwner) public forOwner {
         require(updateContract.delegatecall(bytes4(keccak256("changeManager(address)")), newOwner));
     }
 
     function addInB(address updateContract, uint256 a, uint256 b) public {
         require(updateContract.call(bytes4(keccak256("add(uint256,uint256)")), a, b));
+    }
+
+    function callOracle(address _oracle) public returns (string) {
+        require(_oracle.delegatecall(bytes4(keccak256("result()"))));
     }
 }
