@@ -22,7 +22,8 @@ class ContributeForm extends Component {
     numberOfTransactions: '',
     value: '',
     loading: false,
-    errorMessage: ''
+    errorMessage: '',
+    tx_time: ''
   };
 
   onSubmit = async (event) => {
@@ -33,10 +34,13 @@ class ContributeForm extends Component {
     const campaign = Campaign(this.props.address);
     try
     {
+      const start_time = new Date();
       await campaign.methods.contribute().send({
       from: this.state.currentAccount,
       value: web3.utils.toWei(this.state.value, 'ether')
       });
+      const end_time = new Date();
+      this.setState({ tx_time: (end_time-start_time) });
       // After the above we refresh the page to show the updated campaign data
       Router.replaceRoute(`/campaigns/${this.props.address}`);
     } catch (err) {
@@ -86,6 +90,7 @@ class ContributeForm extends Component {
       <h4>Your account: {this.state.currentAccount}</h4>
       <h4>Your balance: {this.state.currentBalance} ether</h4>
       <h4>Your total transactions: {this.state.numberOfTransactions}</h4>
+      <h4>Your last transaction took: {this.state.tx_time} ms</h4>
     </div>
     );
   }

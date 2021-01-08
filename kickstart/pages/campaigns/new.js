@@ -19,6 +19,7 @@ class CampaignNew extends Component {
     currentAccount: '',
     cuurentBalance: '',
     loading: false,
+    tx_time: ''
   };
 
   static async getInitialProps() {
@@ -33,13 +34,16 @@ class CampaignNew extends Component {
 
     // Following to catch error if transaction fails
     try {
+      const start_time = new Date();   // For transaction confirmation time
       const accounts = await web3.eth.getAccounts();
       await factory.methods
         .createCampaign(this.state.minimumContribution)
         .send({from: accounts[0]});
 
+      const end_time = new Date();
+      this.setState({ tx_time: (end_time-start_time) });
         // After the successfull execution of a transaction we re-route to our index.js page as follows
-        Router.pushRoute('/');
+        //Router.pushRoute('/');
       } catch (err) {
         this.setState({ errorMessage: err.message });
       }
@@ -60,6 +64,7 @@ class CampaignNew extends Component {
         <h3>Create a new campaign:</h3>
         <h4>You are at account: {this.state.currentAccount}</h4>
         <h4>Your current balance: {this.state.currentBalance} ether</h4>
+        <h4>Your transaction took: {this.state.tx_time} ms</h4>
         <hr />
         <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
           <Form.Field>

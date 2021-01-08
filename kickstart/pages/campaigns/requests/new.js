@@ -17,7 +17,8 @@ class newRequest extends Component {
     currentAccount:'',
     currentBalance:'',
     campaign: '',
-    manager: ''
+    manager: '',
+    tx_time: ''
   };
 
   // We need the address of the relevant campaign we are interested in and that is
@@ -44,6 +45,7 @@ class newRequest extends Component {
 
     this.setState({ loading: true, errorMessage: '' });
     try {
+      const start_time = new Date();
       // Now we destructure our relevant state constants for the createRequest parameters
 
       const { campaign, description, value, recipient } = this.state;
@@ -54,10 +56,10 @@ class newRequest extends Component {
         web3.utils.toWei(value, 'ether'),
         recipient
       ).send({ from: this.state.currentAccount });
-
+      const end_time = new Date();
+      this.setState({ tx_time: (end_time-start_time) });
       // After the successfull request creation we redirect our users back to the request index page
-      Router.pushRoute(`/campaigns/${this.props.address}/requests`);
-      this.setState({ campaignTime });
+      //Router.pushRoute(`/campaigns/${this.props.address}/requests`);
     } catch (err) {
         this.setState({ errorMessage: err.message });
     }
@@ -76,6 +78,7 @@ class newRequest extends Component {
       <h3>Campaign manager: {this.state.manager} (only the manager can create requests)</h3>
       <h4>You are at account: {this.state.currentAccount}</h4>
       <h4>Your balance is: {this.state.currentBalance} ether</h4>
+      <h4>Your transaction took: {this.state.tx_time} ms</h4>
       <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
         <Form.Field>
           <label>Description: </label>
