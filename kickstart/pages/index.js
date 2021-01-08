@@ -26,9 +26,9 @@ class CampaignIndex extends Component {
     const numberOfTransactions = await web3.eth.getTransactionCount(accounts[0]);
     const currentBlock = await web3.eth.getBlockNumber();
     const blockTimeStamp = await web3.eth.getBlock(currentBlock);
-    console.log(blockTimeStamp);
+    //console.log(blockTimeStamp);
     const timeStamp = new Date(blockTimeStamp.timestamp * 1000).toUTCString();
-    console.log(timeStamp);
+    //console.log(timeStamp);
     this.setState({currentAccount, currentBalance, numberOfTransactions, currentBlock, timeStamp});
   };
   // For next we replace react specific componentDidMount with static getInitialProps
