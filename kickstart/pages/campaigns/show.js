@@ -39,7 +39,7 @@ class CamapaignShow extends Component {
       approversCount: summary[3],
       manager: summary[4],
       address: props.query.address,
-      numberOfCampaigns: numberOfCampaigns.length
+      numberOfCampaigns: numberOfCampaigns.length,
     };
   }
 

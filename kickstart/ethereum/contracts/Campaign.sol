@@ -93,6 +93,12 @@ contract Campaign {
         request.approvalCount++;
     }
 
+    function voted(uint index) public view returns(bool) {
+        // We will use a storage variable below since we want to manipulate the data a request at a given index
+        Request storage request = requests[index];
+        return request.approvals[msg.sender];
+    }
+
     // The index in the following referes to the index of a request
     function finaliseRequest(uint index) public restricted {
         // Again we need to following to be a storage variable because we want to manipulate the data of request at index under consideration

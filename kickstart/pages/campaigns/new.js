@@ -31,10 +31,11 @@ class CampaignNew extends Component {
     event.preventDefault();
 
     this.setState({ loading: true, errorMessage: '' });
+    this.setState({ tx_time: '' });
+    const start_time = new Date();   // For transaction confirmation time
 
     // Following to catch error if transaction fails
     try {
-      const start_time = new Date();   // For transaction confirmation time
       const accounts = await web3.eth.getAccounts();
       await factory.methods
         .createCampaign(this.state.minimumContribution)

@@ -23,18 +23,20 @@ class ContributeForm extends Component {
     value: '',
     loading: false,
     errorMessage: '',
-    tx_time: ''
+    tx_time: '',
+    approver: false
   };
 
   onSubmit = async (event) => {
     event.preventDefault();
 
+    this.setState({ tx_time: '' });
+    const start_time = new Date();   // For transaction confirmation time
     this.setState({ loading: true, errorMessage:'' });
     // Now we load up our relevant instance of the campaign
     const campaign = Campaign(this.props.address);
     try
     {
-      const start_time = new Date();
       await campaign.methods.contribute().send({
       from: this.state.currentAccount,
       value: web3.utils.toWei(this.state.value, 'ether')
@@ -56,7 +58,10 @@ class ContributeForm extends Component {
     const balance = await web3.eth.getBalance(accounts[0]);
     const numberOfTransactions = await web3.eth.getTransactionCount(accounts[0]);
     const currentBlock = await web3.eth.getBlockNumber();
-    this.setState({ currentAccount: accounts[0], currentBalance: balance, numberOfTransactions, currentBlock });
+    const campaign = await Campaign(this.props.address)
+    const approver = await campaign.methods.approvers(accounts[0]).call();
+    //console.log(approver);
+    this.setState({ currentAccount: accounts[0], currentBalance: balance, numberOfTransactions, currentBlock, approver });
   };
   render() {
     return (
@@ -91,6 +96,9 @@ class ContributeForm extends Component {
       <h4>Your balance: {this.state.currentBalance} ether</h4>
       <h4>Your total transactions: {this.state.numberOfTransactions}</h4>
       <h4>Your last transaction took: {this.state.tx_time} ms</h4>
+      {this.state.approver ?
+        (<h4 style={{ color:'green' }}>You are an approver</h4>) : (<h4 style={{ color:'red' }}>You are not an approver yet</h4>)
+      }
     </div>
     );
   }

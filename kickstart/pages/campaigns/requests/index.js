@@ -14,7 +14,7 @@ import RequestRow from '../../../components/RequestRow';
 class RequestIndex extends Component {
   state = {
     currentAccount:'',
-    currentBalance:''
+    currentBalance:'',
   };
   // getInitialProps is different from the general props. getInitialProps referes to the data
   // we send to this component from the outside
@@ -81,7 +81,9 @@ class RequestIndex extends Component {
   onEnter = async () => { // This outputs a warning in <div> need to figure it out
     const accounts = await web3.eth.getAccounts();
     const balance = await web3.eth.getBalance(accounts[0]);
-    this.setState({ currentAccount: accounts[0], currentBalance: balance});
+    const campaign = await Campaign(this.props.address);
+    const approver = await campaign.methods.approvers(accounts[0]).call();
+    this.setState({ currentAccount: accounts[0], currentBalance: balance, approver});
   };
 
   render() {
@@ -95,6 +97,10 @@ class RequestIndex extends Component {
           <h4>Campaign manager: {this.props.manager} (only the manager can finalise the request)</h4>
           <h4>You are at account: {this.state.currentAccount}</h4>
           <h4>Your balance: {this.state.currentBalance}</h4>
+          <h4>Only approvers can approve a request</h4>
+          {this.state.approver ?
+            (<h4 style={{ color:'green' }}>You are an approver</h4>) : (<h4 style={{ color:'red' }}>You are not an approver yet</h4>)
+          }
         <hr />
         <Link route={`/campaigns/${this.props.address}/requests/new`}>
           <a>
@@ -115,8 +121,10 @@ class RequestIndex extends Component {
               <HeaderCell>Amount required (ether)</HeaderCell>
               <HeaderCell>Recipient</HeaderCell>
               <HeaderCell>Approvals (Yes votes/contributors)</HeaderCell>
+              <HeaderCell>Voted</HeaderCell>
               <HeaderCell>Approve</HeaderCell>
               <HeaderCell>Finalise</HeaderCell>
+              <HeaderCell>Tx latency</HeaderCell>
             </Row>
           </Header>
           <Body>

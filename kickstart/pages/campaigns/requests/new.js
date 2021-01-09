@@ -44,8 +44,9 @@ class newRequest extends Component {
     event.preventDefault();
 
     this.setState({ loading: true, errorMessage: '' });
+    this.setState({ tx_time: '' });
+    const start_time = new Date();
     try {
-      const start_time = new Date();
       // Now we destructure our relevant state constants for the createRequest parameters
 
       const { campaign, description, value, recipient } = this.state;
