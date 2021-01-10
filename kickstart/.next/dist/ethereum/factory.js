@@ -20,7 +20,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // use an instance from this at other places
 
 // Now this is the instace of Web3 with the relevant provider we setup in web3.js file
-var instance = new _web2.default.eth.Contract(JSON.parse(_CampaignFactory2.default.interface), '0x187b0D36AB2AD830dbcfd7F15EBAE9E00f737E53');
+var instance = new _web2.default.eth.Contract(JSON.parse(_CampaignFactory2.default.interface), '0xAAa6EE0D0d47120D9a492B7345aC955A08fAB267');
 
 // Now we import our already compiled contract from the build directory and load
 // it up at the address where it was originally deployed to our local dockerised blockchain. The address we saved
