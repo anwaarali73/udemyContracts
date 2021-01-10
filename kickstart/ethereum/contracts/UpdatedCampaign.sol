@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.4.25;
 
 // <provableAPI>
 // Release targetted at solc 0.4.25 to silence compiler warning/error messages, compatible down to 0.4.22
@@ -32,8 +32,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-
-pragma solidity >= 0.4.22 < 0.5;// Incompatible compiler version... please select one stated within pragma solidity or use different provableAPI version
 
 contract ProvableI {
     address public cbAddress;
@@ -1250,7 +1248,7 @@ contract CampaignFactory {
     address public overAllOwner;
     address public  updateContract;
 
-    function CampaignFactory() public {
+    constructor() public {
         overAllOwner = msg.sender;
     }
 
@@ -1330,7 +1328,7 @@ contract Campaign is usingProvable {
     uint public approversCount; // keep track of number of all the contributors  // This is campaign specific
 
 
-    function Campaign(uint minimum, address creator, address _overAllOwner) public {
+    constructor(uint minimum, address creator, address _overAllOwner) public {
         OAR = OracleAddrResolverI(0x93F40138E4b1515a81d76217fa0aab02D68B1c36);   // From ethereum bridge instance
         manager = creator;   // Creator is the address of the node who invokes the createCampaign function in the above contract
         minimumContribution = minimum;
@@ -1358,6 +1356,16 @@ contract Campaign is usingProvable {
         approvers[msg.sender] = true; // It means msg.sender is true or is a contributor and hence an approver
         approversCount++;
     }
+
+    function getOutsideMeasurement() public payable {
+        provableID = provable_query("WolframAlpha", "square root of 1225");
+    }
+
+    function __callback(bytes32 _provableID, string _result) public {
+        if(msg.sender != provable_cbAddress()) revert();
+        oracleResult = _result;
+    }
+
 
     function voted(uint index) public view returns(bool) {
         // We will use a storage variable below since we want to manipulate the data a request at a given index
